@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/language_provider.dart';
 import '../l10n/app_strings.dart';
+import '../services/tflite_service.dart';
 
 class DetectDiseaseScreen extends StatefulWidget {
   const DetectDiseaseScreen({super.key});
@@ -20,8 +21,24 @@ class _DetectDiseaseScreenState
   File? selectedImage;
   final picker = ImagePicker();
 
+  final TFLiteService _tfliteService = TFLiteService();
+
   String result = "";
   bool isLoading = false;
+  bool modelLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadModel();
+  }
+
+  Future<void> loadModel() async {
+    await _tfliteService.loadModel();
+    setState(() {
+      modelLoaded = true;
+    });
+  }
 
   // CAMERA
   Future pickCamera() async {
@@ -57,8 +74,17 @@ class _DetectDiseaseScreenState
     });
   }
 
-  // 🔥 TEMPORARY PREDICT (UI DEMO ONLY)
+  // 🔥 REAL OFFLINE PREDICTION
   void predict(String lang) async {
+
+    if (!modelLoaded) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Model is still loading..."),
+        ),
+      );
+      return;
+    }
 
     if (selectedImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -76,13 +102,23 @@ class _DetectDiseaseScreenState
       result = "";
     });
 
-    // Fake delay to simulate prediction
-    await Future.delayed(const Duration(seconds: 2));
+    try {
 
-    setState(() {
-      isLoading = false;
-      result = "Tomato Leaf Blight (Demo Result)";
-    });
+      String prediction =
+          await _tfliteService.predict(selectedImage!);
+
+      setState(() {
+        result = prediction;
+        isLoading = false;
+      });
+
+    } catch (e) {
+
+      setState(() {
+        result = "Prediction Failed";
+        isLoading = false;
+      });
+    }
   }
 
   @override
