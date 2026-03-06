@@ -60,6 +60,7 @@ class AppStrings {
       "weekly_report": "Weekly Report",
       "report_message": "Your weekly disease detection summary is ready",
       "yesterday": "Yesterday",
+      "gopalan": "Gopalan",
 
     },
 
@@ -111,6 +112,7 @@ class AppStrings {
       "weekly_report": "ആഴ്ചത്തെ റിപ്പോർട്ട്",
       "report_message": "നിങ്ങളുടെ ആഴ്ചത്തെ രോഗം കണ്ടെത്തൽ സംഗ്രഹം തയ്യാറായി",
       "yesterday": "ഇന്നലെ",
+      "gopalan" : "ഗോപാലൻ",
 
     }
 

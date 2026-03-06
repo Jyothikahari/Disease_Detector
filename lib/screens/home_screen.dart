@@ -5,6 +5,8 @@ import '../l10n/app_strings.dart';
 import 'detect_disease_screen.dart';
 import 'profile_screen.dart';
 import 'notifications_screen.dart';
+import 'login_screen.dart';
+import 'signup_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -81,17 +83,45 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.menu, color: Colors.white),
+            onSelected: (value) {
+
+              if (value == "login") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const LoginScreen(),
+                  ),
+                );
+              }
+
+              if (value == "signup") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SignupScreen(),
+                  ),
+                );
+              }
+            },
             itemBuilder: (context) => [
+
               PopupMenuItem(
+                value: "login",
                 child: Text(AppStrings.text("login", lang)),
               ),
+
               PopupMenuItem(
+                value: "signup",
                 child: Text(AppStrings.text("signup", lang)),
               ),
+
               PopupMenuItem(
+                value: "logout",
                 child: Text(AppStrings.text("logout", lang)),
               ),
+
               PopupMenuItem(
+                value: "help",
                 child: Text(AppStrings.text("help", lang)),
               ),
             ],

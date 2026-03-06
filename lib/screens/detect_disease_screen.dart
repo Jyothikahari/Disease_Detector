@@ -15,8 +15,7 @@ class DetectDiseaseScreen extends StatefulWidget {
       _DetectDiseaseScreenState();
 }
 
-class _DetectDiseaseScreenState
-    extends State<DetectDiseaseScreen> {
+class _DetectDiseaseScreenState extends State<DetectDiseaseScreen> {
 
   File? selectedImage;
   final picker = ImagePicker();
@@ -30,15 +29,19 @@ class _DetectDiseaseScreenState
   @override
   void initState() {
     super.initState();
-    loadModel();
+    _initializeModel();
   }
 
-  Future<void> loadModel() async {
-    await _tfliteService.loadModel();
-    setState(() {
-      modelLoaded = true;
-    });
-  }
+  // LOAD MODEL ON START
+  Future<void> _initializeModel() async {
+
+  bool loaded = await _tfliteService.loadModel();
+
+  setState(() {
+    modelLoaded = loaded;
+  });
+
+}
 
   // CAMERA
   Future pickCamera() async {
@@ -74,7 +77,7 @@ class _DetectDiseaseScreenState
     });
   }
 
-  // 🔥 REAL OFFLINE PREDICTION
+  // PREDICTION
   void predict(String lang) async {
 
     if (!modelLoaded) {
@@ -113,6 +116,8 @@ class _DetectDiseaseScreenState
       });
 
     } catch (e) {
+
+      print("Prediction error: $e");
 
       setState(() {
         result = "Prediction Failed";
